@@ -1,0 +1,939 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>TRAVENTURE ID — Open Trip Lombok</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --green-deep: #0D3D2E;
+    --green-mid: #1A6B4A;
+    --green-bright: #2DBD80;
+    --green-pale: #E8F7EF;
+    --sand: #F5F0E8;
+    --sand-dark: #E8E0CC;
+    --cream: #FAFAF7;
+    --black: #0A0A0A;
+    --gray: #6B7280;
+    --gray-light: #D1D5DB;
+    --white: #FFFFFF;
+    --gold: #C8A84B;
+  }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: 'Inter', sans-serif;
+    background: var(--cream);
+    color: var(--black);
+    overflow-x: hidden;
+  }
+
+  /* NAV */
+  nav {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 1.1rem 2.5rem;
+    background: rgba(10,10,10,0.85);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid rgba(255,255,255,0.06);
+  }
+  .nav-logo {
+    font-family: 'Playfair Display', serif;
+    font-weight: 900; font-size: 1.3rem; letter-spacing: 0.04em;
+    color: var(--white); text-decoration: none;
+  }
+  .nav-logo span { color: var(--green-bright); }
+  .nav-links { display: flex; gap: 2rem; list-style: none; }
+  .nav-links a {
+    color: rgba(255,255,255,0.7); text-decoration: none;
+    font-size: 0.85rem; font-weight: 500; letter-spacing: 0.04em;
+    text-transform: uppercase; transition: color 0.2s;
+  }
+  .nav-links a:hover { color: var(--green-bright); }
+  .nav-cta {
+    background: var(--green-bright); color: var(--green-deep);
+    padding: 0.55rem 1.4rem; border-radius: 50px;
+    font-size: 0.82rem; font-weight: 600; text-decoration: none;
+    letter-spacing: 0.03em; transition: opacity 0.2s;
+  }
+  .nav-cta:hover { opacity: 0.88; }
+
+  /* HERO */
+  .hero {
+    min-height: 100vh;
+    background: var(--green-deep);
+    display: flex; align-items: center;
+    position: relative; overflow: hidden;
+    padding: 7rem 2.5rem 4rem;
+  }
+  .hero-bg {
+    position: absolute; inset: 0;
+    background:
+      radial-gradient(ellipse 60% 70% at 70% 50%, rgba(45,189,128,0.12) 0%, transparent 70%),
+      radial-gradient(ellipse 40% 40% at 20% 80%, rgba(45,189,128,0.06) 0%, transparent 60%);
+  }
+  .hero-grid {
+    position: absolute; inset: 0;
+    background-image: linear-gradient(rgba(255,255,255,0.03) 1px, transparent 1px),
+                      linear-gradient(90deg, rgba(255,255,255,0.03) 1px, transparent 1px);
+    background-size: 60px 60px;
+  }
+  .hero-content { position: relative; max-width: 680px; }
+  .hero-eyebrow {
+    display: inline-flex; align-items: center; gap: 8px;
+    background: rgba(45,189,128,0.15); border: 1px solid rgba(45,189,128,0.3);
+    color: var(--green-bright); font-size: 0.75rem; font-weight: 600;
+    letter-spacing: 0.1em; text-transform: uppercase;
+    padding: 0.35rem 0.9rem; border-radius: 50px; margin-bottom: 1.5rem;
+  }
+  .hero-eyebrow::before { content: '●'; font-size: 0.5rem; animation: pulse 2s infinite; }
+  @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.3} }
+  .hero-title {
+    font-family: 'Playfair Display', serif;
+    font-weight: 900; font-size: clamp(3rem, 7vw, 5.2rem);
+    line-height: 1.05; color: var(--white);
+    margin-bottom: 1.5rem;
+  }
+  .hero-title em { color: var(--green-bright); font-style: normal; }
+  .hero-sub {
+    font-size: 1.05rem; color: rgba(255,255,255,0.6);
+    line-height: 1.75; max-width: 520px; margin-bottom: 2.5rem;
+  }
+  .hero-actions { display: flex; gap: 1rem; flex-wrap: wrap; }
+  .btn-primary {
+    background: var(--green-bright); color: var(--green-deep);
+    padding: 0.85rem 2rem; border-radius: 50px;
+    font-weight: 700; font-size: 0.9rem; text-decoration: none;
+    letter-spacing: 0.02em; transition: all 0.2s; display: inline-block;
+  }
+  .btn-primary:hover { background: #3DD999; transform: translateY(-1px); }
+  .btn-ghost {
+    border: 1px solid rgba(255,255,255,0.25); color: var(--white);
+    padding: 0.85rem 2rem; border-radius: 50px;
+    font-weight: 500; font-size: 0.9rem; text-decoration: none;
+    transition: all 0.2s; display: inline-block;
+  }
+  .btn-ghost:hover { border-color: var(--green-bright); color: var(--green-bright); }
+  .hero-stats {
+    position: absolute; bottom: 3rem; right: 2.5rem;
+    display: flex; gap: 2.5rem;
+  }
+  .hero-stat { text-align: right; }
+  .hero-stat-num {
+    font-family: 'Playfair Display', serif;
+    font-size: 2rem; font-weight: 700; color: var(--white); display: block;
+  }
+  .hero-stat-label {
+    font-size: 0.72rem; color: rgba(255,255,255,0.45);
+    text-transform: uppercase; letter-spacing: 0.08em;
+  }
+
+  /* SECTION */
+  section { padding: 5rem 2.5rem; }
+  .section-inner { max-width: 1100px; margin: 0 auto; }
+  .section-label {
+    display: inline-block; font-size: 0.72rem; font-weight: 600;
+    color: var(--green-mid); letter-spacing: 0.12em; text-transform: uppercase;
+    margin-bottom: 0.75rem;
+  }
+  .section-title {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(2rem, 4vw, 2.8rem); font-weight: 700;
+    line-height: 1.15; color: var(--black); margin-bottom: 1rem;
+  }
+  .section-desc { font-size: 1rem; color: var(--gray); line-height: 1.75; max-width: 560px; }
+
+  /* PACKAGES */
+  #paket { background: var(--sand); }
+  .pkg-tabs { display: flex; gap: 0.5rem; margin: 2.5rem 0 2rem; flex-wrap: wrap; }
+  .pkg-tab {
+    padding: 0.6rem 1.4rem; border-radius: 50px; cursor: pointer;
+    font-size: 0.85rem; font-weight: 600; border: 1.5px solid var(--sand-dark);
+    background: transparent; color: var(--gray); transition: all 0.2s;
+  }
+  .pkg-tab.active {
+    background: var(--green-deep); color: var(--white); border-color: var(--green-deep);
+  }
+  .pkg-panel { display: none; }
+  .pkg-panel.active { display: grid; grid-template-columns: 1fr 1.1fr; gap: 2rem; align-items: start; }
+
+  .pkg-info { background: var(--white); border-radius: 20px; padding: 2rem; border: 1px solid var(--sand-dark); }
+  .pkg-badge {
+    display: inline-block; background: var(--green-pale); color: var(--green-mid);
+    font-size: 0.72rem; font-weight: 700; letter-spacing: 0.08em;
+    text-transform: uppercase; padding: 0.3rem 0.75rem; border-radius: 50px; margin-bottom: 1rem;
+  }
+  .pkg-name {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.8rem; font-weight: 700; color: var(--black); margin-bottom: 0.3rem;
+  }
+  .pkg-desc { font-size: 0.9rem; color: var(--gray); margin-bottom: 1.5rem; line-height: 1.65; }
+
+  .price-table { margin-bottom: 1.5rem; }
+  .price-table-head {
+    display: grid; grid-template-columns: 1fr 1fr 1fr;
+    gap: 0; background: var(--green-deep); border-radius: 10px 10px 0 0;
+    padding: 0.6rem 1rem;
+  }
+  .price-table-head span { font-size: 0.72rem; color: rgba(255,255,255,0.6); font-weight: 500; }
+  .price-row {
+    display: grid; grid-template-columns: 1fr 1fr 1fr;
+    padding: 0.7rem 1rem; border-bottom: 1px solid var(--sand-dark);
+    align-items: center;
+  }
+  .price-row:last-child { border-bottom: none; border-radius: 0 0 10px 10px; }
+  .price-row:nth-child(odd) { background: var(--sand); }
+  .price-row:nth-child(even) { background: var(--white); }
+  .price-tier { font-size: 0.85rem; font-weight: 500; color: var(--black); }
+  .price-pax { font-size: 0.78rem; color: var(--gray); }
+  .price-val { font-family: 'Playfair Display', serif; font-size: 1.15rem; font-weight: 700; color: var(--green-mid); }
+
+  .incl-title { font-size: 0.78rem; font-weight: 600; color: var(--black); margin-bottom: 0.6rem; text-transform: uppercase; letter-spacing: 0.06em; }
+  .incl-items { display: flex; flex-direction: column; gap: 6px; }
+  .incl-item { display: flex; align-items: center; gap: 8px; font-size: 0.85rem; color: var(--gray); }
+  .incl-item .tick { width: 18px; height: 18px; border-radius: 50%; background: var(--green-pale); color: var(--green-mid); display: flex; align-items: center; justify-content: center; font-size: 10px; flex-shrink: 0; }
+  .incl-item .cross { width: 18px; height: 18px; border-radius: 50%; background: #FEE2E2; color: #DC2626; display: flex; align-items: center; justify-content: center; font-size: 10px; flex-shrink: 0; }
+
+  /* Itinerary */
+  .pkg-itin { }
+  .itin-title { font-size: 0.78rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.06em; color: var(--black); margin-bottom: 1rem; }
+  .itin-days { display: flex; flex-direction: column; gap: 0; }
+  .itin-day {
+    display: flex; gap: 0; position: relative;
+  }
+  .itin-day-left {
+    display: flex; flex-direction: column; align-items: center; width: 44px; flex-shrink: 0;
+  }
+  .itin-dot {
+    width: 32px; height: 32px; border-radius: 50%;
+    background: var(--green-deep); color: var(--white);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 0.7rem; font-weight: 700; flex-shrink: 0;
+  }
+  .itin-line { flex: 1; width: 2px; background: var(--sand-dark); margin: 2px 0; }
+  .itin-day:last-child .itin-line { display: none; }
+  .itin-body { padding: 0 0 1.4rem 0.75rem; }
+  .itin-head { font-size: 0.78rem; font-weight: 600; color: var(--green-mid); margin-bottom: 0.25rem; text-transform: uppercase; letter-spacing: 0.05em; }
+  .itin-items { list-style: none; display: flex; flex-direction: column; gap: 3px; }
+  .itin-items li { font-size: 0.84rem; color: var(--gray); line-height: 1.5; padding-left: 0.75rem; position: relative; }
+  .itin-items li::before { content: '—'; position: absolute; left: 0; color: var(--sand-dark); }
+
+  /* HOTEL */
+  #hotel { background: var(--cream); }
+  .hotel-cols { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; margin-top: 2.5rem; }
+  .hotel-col-title {
+    display: flex; align-items: center; gap: 10px;
+    font-size: 0.8rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em;
+    margin-bottom: 1rem;
+  }
+  .hotel-col-pill {
+    padding: 0.25rem 0.75rem; border-radius: 50px; font-size: 0.7rem;
+  }
+  .senggigi-pill { background: var(--green-pale); color: var(--green-mid); }
+  .sembalun-pill { background: #EFF6FF; color: #2563EB; }
+  .hotel-card {
+    background: var(--white); border: 1px solid var(--sand-dark);
+    border-radius: 14px; padding: 1.1rem 1.25rem; margin-bottom: 0.75rem;
+    display: flex; justify-content: space-between; align-items: center;
+    transition: box-shadow 0.2s;
+  }
+  .hotel-card:hover { box-shadow: 0 4px 20px rgba(0,0,0,0.06); }
+  .hotel-card-left { }
+  .hotel-card-class { font-size: 0.68rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.08em; color: var(--gray); margin-bottom: 2px; }
+  .hotel-card-name { font-size: 0.92rem; font-weight: 600; color: var(--black); margin-bottom: 1px; }
+  .hotel-card-examples { font-size: 0.78rem; color: var(--gray); }
+  .hotel-card-price { text-align: right; }
+  .hotel-card-price-val { font-family: 'Playfair Display', serif; font-size: 1rem; font-weight: 700; color: var(--green-mid); white-space: nowrap; }
+  .hotel-card-price-label { font-size: 0.68rem; color: var(--gray); }
+
+  /* DESTINATIONS */
+  #destinasi { background: var(--green-deep); }
+  #destinasi .section-label { color: var(--green-bright); }
+  #destinasi .section-title { color: var(--white); }
+  #destinasi .section-desc { color: rgba(255,255,255,0.55); }
+  .dest-filter { display: flex; gap: 0.5rem; margin: 2rem 0 1.5rem; flex-wrap: wrap; }
+  .dest-filter-btn {
+    padding: 0.45rem 1.1rem; border-radius: 50px;
+    font-size: 0.78rem; font-weight: 500; cursor: pointer;
+    border: 1px solid rgba(255,255,255,0.15); background: transparent;
+    color: rgba(255,255,255,0.6); transition: all 0.2s;
+  }
+  .dest-filter-btn.active, .dest-filter-btn:hover {
+    background: var(--green-bright); color: var(--green-deep);
+    border-color: var(--green-bright); font-weight: 700;
+  }
+  .dest-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 1rem; }
+  .dest-card {
+    background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 14px; padding: 1.25rem; transition: all 0.2s; cursor: default;
+  }
+  .dest-card:hover { background: rgba(255,255,255,0.08); border-color: rgba(45,189,128,0.3); }
+  .dest-card[data-region="barat"] { border-top: 2px solid var(--green-bright); }
+  .dest-card[data-region="timur"] { border-top: 2px solid #60A5FA; }
+  .dest-card[data-region="tengah"] { border-top: 2px solid var(--gold); }
+  .dest-card[data-region="gili"] { border-top: 2px solid #F472B6; }
+  .dest-region {
+    font-size: 0.65rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em;
+    margin-bottom: 0.5rem;
+  }
+  .dest-card[data-region="barat"] .dest-region { color: var(--green-bright); }
+  .dest-card[data-region="timur"] .dest-region { color: #60A5FA; }
+  .dest-card[data-region="tengah"] .dest-region { color: var(--gold); }
+  .dest-card[data-region="gili"] .dest-region { color: #F472B6; }
+  .dest-name { font-size: 0.95rem; font-weight: 600; color: var(--white); margin-bottom: 0.4rem; }
+  .dest-desc { font-size: 0.78rem; color: rgba(255,255,255,0.45); line-height: 1.6; }
+  .dest-hidden { display: none; }
+
+  /* ADDON */
+  #addon { background: var(--sand); }
+  .addon-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 1rem; margin-top: 2rem; }
+  .addon-card {
+    background: var(--white); border: 1px solid var(--sand-dark);
+    border-radius: 16px; padding: 1.5rem; transition: all 0.2s;
+  }
+  .addon-card:hover { transform: translateY(-2px); box-shadow: 0 8px 30px rgba(0,0,0,0.07); }
+  .addon-icon { font-size: 1.8rem; margin-bottom: 0.75rem; }
+  .addon-name { font-size: 1rem; font-weight: 600; color: var(--black); margin-bottom: 0.3rem; }
+  .addon-desc { font-size: 0.82rem; color: var(--gray); line-height: 1.6; margin-bottom: 1rem; }
+  .addon-price { font-family: 'Playfair Display', serif; font-size: 1.1rem; font-weight: 700; color: var(--green-mid); }
+  .addon-price-label { font-size: 0.72rem; color: var(--gray); font-family: 'Inter', sans-serif; font-weight: 400; }
+
+  /* CTA */
+  #kontak {
+    background: var(--green-deep); text-align: center;
+    padding: 6rem 2.5rem;
+  }
+  .cta-tag {
+    display: inline-block; background: rgba(45,189,128,0.15);
+    border: 1px solid rgba(45,189,128,0.3); color: var(--green-bright);
+    font-size: 0.72rem; font-weight: 600; text-transform: uppercase;
+    letter-spacing: 0.1em; padding: 0.35rem 1rem; border-radius: 50px; margin-bottom: 1.5rem;
+  }
+  .cta-title {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(2rem, 5vw, 3.5rem); font-weight: 900;
+    color: var(--white); max-width: 620px; margin: 0 auto 1rem; line-height: 1.15;
+  }
+  .cta-title em { color: var(--green-bright); font-style: normal; }
+  .cta-sub { color: rgba(255,255,255,0.5); font-size: 1rem; margin-bottom: 2.5rem; }
+  .cta-buttons { display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; }
+  .btn-wa {
+    background: #25D366; color: var(--white);
+    padding: 0.9rem 2rem; border-radius: 50px;
+    font-weight: 700; font-size: 0.9rem; text-decoration: none; display: inline-flex; align-items: center; gap: 8px;
+    transition: opacity 0.2s;
+  }
+  .btn-wa:hover { opacity: 0.88; }
+  .wa-icon { width: 20px; height: 20px; }
+
+  /* FOOTER */
+  footer {
+    background: #050F09; color: rgba(255,255,255,0.4);
+    padding: 2rem 2.5rem; display: flex;
+    justify-content: space-between; align-items: center; flex-wrap: gap;
+    font-size: 0.8rem;
+  }
+  .footer-logo {
+    font-family: 'Playfair Display', serif;
+    font-weight: 900; font-size: 1.1rem; color: var(--white);
+  }
+  .footer-logo span { color: var(--green-bright); }
+
+  /* RESPONSIVE */
+  @media (max-width: 768px) {
+    nav { padding: 1rem 1.25rem; }
+    .nav-links { display: none; }
+    .hero { padding: 6rem 1.25rem 3rem; }
+    .hero-stats { position: static; margin-top: 2rem; justify-content: flex-start; }
+    section { padding: 3.5rem 1.25rem; }
+    .pkg-panel.active { grid-template-columns: 1fr; }
+    .hotel-cols { grid-template-columns: 1fr; }
+    .price-table-head, .price-row { grid-template-columns: 1fr 1fr; }
+    .price-table-head span:last-child { display: none; }
+    .price-pax { display: none; }
+    footer { flex-direction: column; gap: 0.5rem; text-align: center; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after { animation: none !important; transition: none !important; }
+  }
+</style>
+</head>
+<body>
+
+<nav>
+  <a href="#" class="nav-logo">TRAVEN<span>TURE</span> ID</a>
+  <ul class="nav-links">
+    <li><a href="#paket">Paket</a></li>
+    <li><a href="#hotel">Hotel</a></li>
+    <li><a href="#destinasi">Destinasi</a></li>
+    <li><a href="#addon">Add-on</a></li>
+  </ul>
+  <a href="#kontak" class="nav-cta">Booking Sekarang</a>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-bg"></div>
+  <div class="hero-grid"></div>
+  <div class="hero-content">
+    <div class="hero-eyebrow">Open Trip Lombok 2025</div>
+    <h1 class="hero-title">Jelajahi<br><em>Lombok</em><br>Tanpa Ribet.</h1>
+    <p class="hero-sub">Dari pantai biru Senggigi hingga pegunungan Sembalun yang sejuk. TRAVENTURE ID hadir untuk membuatmu fokus menikmati perjalanan — bukan mengurus logistik.</p>
+    <div class="hero-actions">
+      <a href="#paket" class="btn-primary">Lihat Paket Trip</a>
+      <a href="#destinasi" class="btn-ghost">Explore Destinasi</a>
+    </div>
+  </div>
+  <div class="hero-stats">
+    <div class="hero-stat">
+      <span class="hero-stat-num">4</span>
+      <span class="hero-stat-label">Paket Tersedia</span>
+    </div>
+    <div class="hero-stat">
+      <span class="hero-stat-num">12+</span>
+      <span class="hero-stat-label">Destinasi</span>
+    </div>
+    <div class="hero-stat">
+      <span class="hero-stat-num">2</span>
+      <span class="hero-stat-label">Wilayah Lombok</span>
+    </div>
+  </div>
+</section>
+
+<!-- PACKAGES -->
+<section id="paket">
+  <div class="section-inner">
+    <span class="section-label">Pilih Paketmu</span>
+    <h2 class="section-title">Open Trip Lombok<br>Sesuai Waktumu</h2>
+    <p class="section-desc">Harga per orang untuk keberangkatan bersama (minimum 6 peserta). Tersedia juga opsi private trip untuk grup kecil.</p>
+
+    <div class="pkg-tabs">
+      <button class="pkg-tab active" onclick="switchPkg(0)">2H / 1M</button>
+      <button class="pkg-tab" onclick="switchPkg(1)">3H / 2M</button>
+      <button class="pkg-tab" onclick="switchPkg(2)">4H / 3M</button>
+      <button class="pkg-tab" onclick="switchPkg(3)">5H / 4M ★ Best</button>
+    </div>
+
+    <!-- PKG 0 -->
+    <div class="pkg-panel active" id="pkg-0">
+      <div class="pkg-info">
+        <span class="pkg-badge">2 Hari · 1 Malam</span>
+        <div class="pkg-name">Weekend Escape</div>
+        <p class="pkg-desc">Paket singkat tapi padat. Cocok untuk kamu yang punya waktu terbatas tapi tetap mau merasakan pesona Lombok Barat dan Tengah.</p>
+        <div class="price-table">
+          <div class="price-table-head">
+            <span>Kelas</span><span>Peserta</span><span>Per Orang</span>
+          </div>
+          <div class="price-row"><span class="price-tier">Budget</span><span class="price-pax">6+ pax</span><span class="price-val">Rp 650rb</span></div>
+          <div class="price-row"><span class="price-tier">Standar</span><span class="price-pax">6+ pax</span><span class="price-val">Rp 850rb</span></div>
+          <div class="price-row"><span class="price-tier">Private</span><span class="price-pax">2–4 pax</span><span class="price-val">Rp 1,1jt</span></div>
+        </div>
+        <div class="incl-title">Yang Sudah Termasuk</div>
+        <div class="incl-items">
+          <div class="incl-item"><span class="tick">✓</span>Transportasi AC + driver</div>
+          <div class="incl-item"><span class="tick">✓</span>1 malam hotel Senggigi</div>
+          <div class="incl-item"><span class="tick">✓</span>Sarapan 1x</div>
+          <div class="incl-item"><span class="tick">✓</span>Tour guide lokal</div>
+          <div class="incl-item"><span class="tick">✓</span>Tiket masuk semua destinasi</div>
+          <div class="incl-item"><span class="cross">✕</span>Tiket pesawat & makan siang/malam</div>
+        </div>
+      </div>
+      <div class="pkg-itin">
+        <div class="itin-title">Itinerary Perjalanan</div>
+        <div class="itin-days">
+          <div class="itin-day">
+            <div class="itin-day-left"><div class="itin-dot">D1</div><div class="itin-line"></div></div>
+            <div class="itin-body">
+              <div class="itin-head">Lombok Barat — Senggigi</div>
+              <ul class="itin-items">
+                <li>Penjemputan di Bandara Lombok</li>
+                <li>Pantai Senggigi & Pura Batu Bolong</li>
+                <li>Sunset di Bukit Malimbu</li>
+                <li>Check-in hotel Senggigi</li>
+              </ul>
+            </div>
+          </div>
+          <div class="itin-day">
+            <div class="itin-day-left"><div class="itin-dot">D2</div><div class="itin-line"></div></div>
+            <div class="itin-body">
+              <div class="itin-head">Lombok Tengah & Kepulangan</div>
+              <ul class="itin-items">
+                <li>Taman Narmada</li>
+                <li>Desa Sade — Budaya Sasak</li>
+                <li>Pantai Kuta Mandalika & Bukit Merese</li>
+                <li>Antar ke Bandara Lombok</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- PKG 1 -->
+    <div class="pkg-panel" id="pkg-1">
+      <div class="pkg-info">
+        <span class="pkg-badge">3 Hari · 2 Malam</span>
+        <div class="pkg-name">Lombok Explorer</div>
+        <p class="pkg-desc">Nikmati dua karakter Lombok dalam satu trip: pantai tropis Senggigi di barat dan udara segar pegunungan Sembalun di timur.</p>
+        <div class="price-table">
+          <div class="price-table-head">
+            <span>Kelas</span><span>Peserta</span><span>Per Orang</span>
+          </div>
+          <div class="price-row"><span class="price-tier">Budget</span><span class="price-pax">6+ pax</span><span class="price-val">Rp 1,1jt</span></div>
+          <div class="price-row"><span class="price-tier">Standar</span><span class="price-pax">6+ pax</span><span class="price-val">Rp 1,45jt</span></div>
+          <div class="price-row"><span class="price-tier">Private</span><span class="price-pax">2–4 pax</span><span class="price-val">Rp 1,9jt</span></div>
+        </div>
+        <div class="incl-title">Yang Sudah Termasuk</div>
+        <div class="incl-items">
+          <div class="incl-item"><span class="tick">✓</span>Transportasi AC + driver 3 hari</div>
+          <div class="incl-item"><span class="tick">✓</span>1 malam Senggigi + 1 malam Sembalun</div>
+          <div class="incl-item"><span class="tick">✓</span>Sarapan 2x</div>
+          <div class="incl-item"><span class="tick">✓</span>Tour guide lokal + tiket masuk</div>
+          <div class="incl-item"><span class="cross">✕</span>Tiket pesawat & makan siang/malam</div>
+        </div>
+      </div>
+      <div class="pkg-itin">
+        <div class="itin-title">Itinerary Perjalanan</div>
+        <div class="itin-days">
+          <div class="itin-day">
+            <div class="itin-day-left"><div class="itin-dot">D1</div><div class="itin-line"></div></div>
+            <div class="itin-body">
+              <div class="itin-head">Senggigi — Lombok Barat</div>
+              <ul class="itin-items">
+                <li>Penjemputan Bandara</li>
+                <li>Pantai Senggigi & Pura Batu Bolong</li>
+                <li>Bukit Malimbu — sunset spot terbaik</li>
+                <li>Check-in hotel Senggigi</li>
+              </ul>
+            </div>
+          </div>
+          <div class="itin-day">
+            <div class="itin-day-left"><div class="itin-dot">D2</div><div class="itin-line"></div></div>
+            <div class="itin-body">
+              <div class="itin-head">Perjalanan ke Sembalun</div>
+              <ul class="itin-items">
+                <li>Bukit Selong — panorama ladang warna-warni</li>
+                <li>Kebun Stroberi Sembalun</li>
+                <li>Trekking ringan Bukit Pergasingan</li>
+                <li>Check-in penginapan Sembalun</li>
+              </ul>
+            </div>
+          </div>
+          <div class="itin-day">
+            <div class="itin-day-left"><div class="itin-dot">D3</div><div class="itin-line"></div></div>
+            <div class="itin-body">
+              <div class="itin-head">Lombok Tengah & Kepulangan</div>
+              <ul class="itin-items">
+                <li>Air Terjun Sendang Gile & Tiu Kelep</li>
+                <li>Desa Sade — perkampungan adat Sasak</li>
+                <li>Pantai Kuta Mandalika</li>
+                <li>Antar ke Bandara</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- PKG 2 -->
+    <div class="pkg-panel" id="pkg-2">
+      <div class="pkg-info">
+        <span class="pkg-badge">4 Hari · 3 Malam</span>
+        <div class="pkg-name">Gili & Rinjani</div>
+        <p class="pkg-desc">Trip terlengkap bagi yang ingin merasakan laut biru Gili, budaya Sasak, dan udara segar Sembalun dalam satu perjalanan.</p>
+        <div class="price-table">
+          <div class="price-table-head">
+            <span>Kelas</span><span>Peserta</span><span>Per Orang</span>
+          </div>
+          <div class="price-row"><span class="price-tier">Budget</span><span class="price-pax">6+ pax</span><span class="price-val">Rp 1,5jt</span></div>
+          <div class="price-row"><span class="price-tier">Standar</span><span class="price-pax">6+ pax</span><span class="price-val">Rp 1,95jt</span></div>
+          <div class="price-row"><span class="price-tier">Private</span><span class="price-pax">2–4 pax</span><span class="price-val">Rp 2,6jt</span></div>
+        </div>
+        <div class="incl-title">Yang Sudah Termasuk</div>
+        <div class="incl-items">
+          <div class="incl-item"><span class="tick">✓</span>Transportasi AC + driver 4 hari</div>
+          <div class="incl-item"><span class="tick">✓</span>2 malam Senggigi + 1 malam Sembalun</div>
+          <div class="incl-item"><span class="tick">✓</span>Sarapan 3x</div>
+          <div class="incl-item"><span class="tick">✓</span>Snorkeling 3 Gili (boat + life jacket)</div>
+          <div class="incl-item"><span class="tick">✓</span>Tour guide + tiket masuk semua destinasi</div>
+          <div class="incl-item"><span class="cross">✕</span>Tiket pesawat & makan siang/malam</div>
+        </div>
+      </div>
+      <div class="pkg-itin">
+        <div class="itin-title">Itinerary Perjalanan</div>
+        <div class="itin-days">
+          <div class="itin-day">
+            <div class="itin-day-left"><div class="itin-dot">D1</div><div class="itin-line"></div></div>
+            <div class="itin-body">
+              <div class="itin-head">Tiba di Senggigi</div>
+              <ul class="itin-items">
+                <li>Penjemputan Bandara</li>
+                <li>Pantai Senggigi & Pura Batu Bolong</li>
+                <li>Bukit Malimbu sunset</li>
+                <li>Check-in hotel Senggigi</li>
+              </ul>
+            </div>
+          </div>
+          <div class="itin-day">
+            <div class="itin-day-left"><div class="itin-dot">D2</div><div class="itin-line"></div></div>
+            <div class="itin-body">
+              <div class="itin-head">Day Trip Gili Islands</div>
+              <ul class="itin-items">
+                <li>Gili Trawangan — snorkeling & bersepeda</li>
+                <li>Gili Meno — spot penyu & bawah laut</li>
+                <li>Gili Air — pantai dan kuliner</li>
+                <li>Kembali ke hotel Senggigi</li>
+              </ul>
+            </div>
+          </div>
+          <div class="itin-day">
+            <div class="itin-day-left"><div class="itin-dot">D3</div><div class="itin-line"></div></div>
+            <div class="itin-body">
+              <div class="itin-head">Menuju Sembalun</div>
+              <ul class="itin-items">
+                <li>Bukit Selong & Kebun Stroberi</li>
+                <li>Trekking Bukit Pergasingan</li>
+                <li>Check-in penginapan Sembalun</li>
+              </ul>
+            </div>
+          </div>
+          <div class="itin-day">
+            <div class="itin-day-left"><div class="itin-dot">D4</div><div class="itin-line"></div></div>
+            <div class="itin-body">
+              <div class="itin-head">Lombok Tengah & Pulang</div>
+              <ul class="itin-items">
+                <li>Air Terjun Sendang Gile & Tiu Kelep</li>
+                <li>Desa Sade & Pantai Kuta Mandalika</li>
+                <li>Bukit Merese sunset</li>
+                <li>Antar ke Bandara</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- PKG 3 -->
+    <div class="pkg-panel" id="pkg-3">
+      <div class="pkg-info">
+        <span class="pkg-badge">5 Hari · 4 Malam — Best Value</span>
+        <div class="pkg-name">Full Lombok Experience</div>
+        <p class="pkg-desc">Eksplorasi Lombok paling menyeluruh. Pantai, gili, budaya Sasak, pegunungan Sembalun, Pantai Pink — semua dalam satu trip epik.</p>
+        <div class="price-table">
+          <div class="price-table-head">
+            <span>Kelas</span><span>Peserta</span><span>Per Orang</span>
+          </div>
+          <div class="price-row"><span class="price-tier">Budget</span><span class="price-pax">6+ pax</span><span class="price-val">Rp 1,95jt</span></div>
+          <div class="price-row"><span class="price-tier">Standar</span><span class="price-pax">6+ pax</span><span class="price-val">Rp 2,5jt</span></div>
+          <div class="price-row"><span class="price-tier">Menengah</span><span class="price-pax">6+ pax</span><span class="price-val">Rp 3,3jt</span></div>
+          <div class="price-row"><span class="price-tier">Private</span><span class="price-pax">2–4 pax</span><span class="price-val">Rp 4,2jt</span></div>
+        </div>
+        <div class="incl-title">Yang Sudah Termasuk</div>
+        <div class="incl-items">
+          <div class="incl-item"><span class="tick">✓</span>Transportasi AC + driver 5 hari penuh</div>
+          <div class="incl-item"><span class="tick">✓</span>2 malam Senggigi + 2 malam Sembalun</div>
+          <div class="incl-item"><span class="tick">✓</span>Sarapan 4x</div>
+          <div class="incl-item"><span class="tick">✓</span>Snorkeling 3 Gili + Pantai Pink</div>
+          <div class="incl-item"><span class="tick">✓</span>Trekking Bukit Pergasingan</div>
+          <div class="incl-item"><span class="tick">✓</span>Dokumentasi foto perjalanan</div>
+          <div class="incl-item"><span class="cross">✕</span>Tiket pesawat & makan siang/malam</div>
+        </div>
+      </div>
+      <div class="pkg-itin">
+        <div class="itin-title">Itinerary Perjalanan</div>
+        <div class="itin-days">
+          <div class="itin-day">
+            <div class="itin-day-left"><div class="itin-dot">D1</div><div class="itin-line"></div></div>
+            <div class="itin-body">
+              <div class="itin-head">Tiba — Senggigi</div>
+              <ul class="itin-items">
+                <li>Penjemputan Bandara Lombok</li>
+                <li>Pantai Senggigi, Pura Batu Bolong</li>
+                <li>Taman Narmada & Bukit Malimbu</li>
+                <li>Check-in hotel Senggigi</li>
+              </ul>
+            </div>
+          </div>
+          <div class="itin-day">
+            <div class="itin-day-left"><div class="itin-dot">D2</div><div class="itin-line"></div></div>
+            <div class="itin-body">
+              <div class="itin-head">Gili Islands Day</div>
+              <ul class="itin-items">
+                <li>Gili Trawangan, Gili Meno, Gili Air</li>
+                <li>Snorkeling & bersepeda keliling pulau</li>
+                <li>Malam di Senggigi</li>
+              </ul>
+            </div>
+          </div>
+          <div class="itin-day">
+            <div class="itin-day-left"><div class="itin-dot">D3</div><div class="itin-line"></div></div>
+            <div class="itin-body">
+              <div class="itin-head">Menuju Sembalun</div>
+              <ul class="itin-items">
+                <li>Desa Beleq — kampung adat Sasak tertua</li>
+                <li>Bukit Selong & Kebun Stroberi</li>
+                <li>Check-in penginapan Sembalun</li>
+              </ul>
+            </div>
+          </div>
+          <div class="itin-day">
+            <div class="itin-day-left"><div class="itin-dot">D4</div><div class="itin-line"></div></div>
+            <div class="itin-body">
+              <div class="itin-head">Petualangan Sembalun</div>
+              <ul class="itin-items">
+                <li>Sunrise Bukit Pergasingan</li>
+                <li>Air Terjun Sendang Gile & Tiu Kelep</li>
+                <li>Pantai Pink (Tangsi) — island hopping</li>
+              </ul>
+            </div>
+          </div>
+          <div class="itin-day">
+            <div class="itin-day-left"><div class="itin-dot">D5</div><div class="itin-line"></div></div>
+            <div class="itin-body">
+              <div class="itin-head">Budaya & Kepulangan</div>
+              <ul class="itin-items">
+                <li>Desa Sade & Sukarara (Tenun Sasak)</li>
+                <li>Pantai Kuta Mandalika</li>
+                <li>Bukit Merese — sunset terakhir</li>
+                <li>Antar ke Bandara Lombok</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- HOTELS -->
+<section id="hotel">
+  <div class="section-inner">
+    <span class="section-label">Akomodasi</span>
+    <h2 class="section-title">Pilihan Penginapan</h2>
+    <p class="section-desc">Untuk paket 2 malam ke atas, kamu menginap di dua lokasi berbeda — merasakan pantai barat dan udara pegunungan timur.</p>
+
+    <div class="hotel-cols">
+      <div>
+        <div class="hotel-col-title">
+          <span class="hotel-col-pill senggigi-pill">Lombok Barat</span>
+          Senggigi & Sekitarnya
+        </div>
+        <div class="hotel-card">
+          <div class="hotel-card-left">
+            <div class="hotel-card-class">Ekonomi ★★</div>
+            <div class="hotel-card-name">Central Inn / Bumi Aditya</div>
+            <div class="hotel-card-examples">OYO, The Semethon, Budget Guesthouse</div>
+          </div>
+          <div class="hotel-card-price">
+            <div class="hotel-card-price-val">Rp 200–350rb</div>
+            <div class="hotel-card-price-label">per kamar/malam</div>
+          </div>
+        </div>
+        <div class="hotel-card">
+          <div class="hotel-card-left">
+            <div class="hotel-card-class">Menengah ★★★</div>
+            <div class="hotel-card-name">Puri Saron / Grand Senggigi</div>
+            <div class="hotel-card-examples">Svarga Resort, Living Asia, Aruna</div>
+          </div>
+          <div class="hotel-card-price">
+            <div class="hotel-card-price-val">Rp 400–700rb</div>
+            <div class="hotel-card-price-label">per kamar/malam</div>
+          </div>
+        </div>
+        <div class="hotel-card">
+          <div class="hotel-card-left">
+            <div class="hotel-card-class">Premium ★★★★</div>
+            <div class="hotel-card-name">Katamaran / Holiday Resort</div>
+            <div class="hotel-card-examples">Merumatta, Sheraton Senggigi, Qunci Villas</div>
+          </div>
+          <div class="hotel-card-price">
+            <div class="hotel-card-price-val">Rp 700rb–1,5jt</div>
+            <div class="hotel-card-price-label">per kamar/malam</div>
+          </div>
+        </div>
+      </div>
+      <div>
+        <div class="hotel-col-title">
+          <span class="hotel-col-pill sembalun-pill">Lombok Timur</span>
+          Sembalun & Sekitarnya
+        </div>
+        <div class="hotel-card">
+          <div class="hotel-card-left">
+            <div class="hotel-card-class">Budget / Guesthouse</div>
+            <div class="hotel-card-name">Teras Sawah / Rinjani Garden</div>
+            <div class="hotel-card-examples">Pondok Pelangi, Sopo Trisno, Nyampon</div>
+          </div>
+          <div class="hotel-card-price">
+            <div class="hotel-card-price-val">Rp 150–280rb</div>
+            <div class="hotel-card-price-label">per kamar/malam</div>
+          </div>
+        </div>
+        <div class="hotel-card">
+          <div class="hotel-card-left">
+            <div class="hotel-card-class">Menengah ★★★</div>
+            <div class="hotel-card-name">Nusantara Hotel / Rinjani Hill</div>
+            <div class="hotel-card-examples">Bukit Tiga Lima, Bale Aur, INKA Villas</div>
+          </div>
+          <div class="hotel-card-price">
+            <div class="hotel-card-price-val">Rp 300–600rb</div>
+            <div class="hotel-card-price-label">per kamar/malam</div>
+          </div>
+        </div>
+        <div class="hotel-card">
+          <div class="hotel-card-left">
+            <div class="hotel-card-class">Premium / Cabin</div>
+            <div class="hotel-card-name">Bobocabin Gunung Rinjani</div>
+            <div class="hotel-card-examples">Zoya Rinjani Villa, HK Villa's, Puncak Lodge</div>
+          </div>
+          <div class="hotel-card-price">
+            <div class="hotel-card-price-val">Rp 600–900rb</div>
+            <div class="hotel-card-price-label">per kamar/malam</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- DESTINATIONS -->
+<section id="destinasi">
+  <div class="section-inner">
+    <span class="section-label">Jelajahi Lombok</span>
+    <h2 class="section-title">Destinasi Pilihan</h2>
+    <p class="section-desc">Setiap paket mencakup destinasi terbaik yang telah dikurasi. Kamu bisa eksplor lebih banyak sesuai paket yang dipilih.</p>
+
+    <div class="dest-filter">
+      <button class="dest-filter-btn active" onclick="filterDest('all', this)">Semua</button>
+      <button class="dest-filter-btn" onclick="filterDest('barat', this)">🌿 Lombok Barat</button>
+      <button class="dest-filter-btn" onclick="filterDest('timur', this)">🏔 Lombok Timur</button>
+      <button class="dest-filter-btn" onclick="filterDest('tengah', this)">🏖 Lombok Tengah</button>
+      <button class="dest-filter-btn" onclick="filterDest('gili', this)">🐠 Kepulauan Gili</button>
+    </div>
+
+    <div class="dest-grid" id="dest-grid">
+      <div class="dest-card" data-region="barat"><div class="dest-region">Lombok Barat</div><div class="dest-name">Pantai Senggigi</div><div class="dest-desc">Pantai ikon Lombok dengan sunset memukau dan suasana resort yang santai.</div></div>
+      <div class="dest-card" data-region="barat"><div class="dest-region">Lombok Barat</div><div class="dest-name">Pura Batu Bolong</div><div class="dest-desc">Pura Hindu di atas karang — perpaduan spiritual dan pemandangan laut.</div></div>
+      <div class="dest-card" data-region="barat"><div class="dest-region">Lombok Barat</div><div class="dest-name">Bukit Malimbu</div><div class="dest-desc">Spot sunset terbaik di Lombok Barat dengan panorama teluk biru.</div></div>
+      <div class="dest-card" data-region="barat"><div class="dest-region">Lombok Barat</div><div class="dest-name">Taman Narmada</div><div class="dest-desc">Taman kerajaan Karangasem dengan replika Rinjani dan Danau Segara Anak.</div></div>
+      <div class="dest-card" data-region="timur"><div class="dest-region">Lombok Timur</div><div class="dest-name">Sembalun Valley</div><div class="dest-desc">Lembah hijau di kaki Rinjani dengan ladang bawang dan kebun stroberi.</div></div>
+      <div class="dest-card" data-region="timur"><div class="dest-region">Lombok Timur</div><div class="dest-name">Bukit Pergasingan</div><div class="dest-desc">Trekking ringan dengan hadiah panorama sawah, perbukitan, dan Rinjani.</div></div>
+      <div class="dest-card" data-region="timur"><div class="dest-region">Lombok Timur</div><div class="dest-name">Bukit Selong</div><div class="dest-desc">Patchwork alami ladang warna-warni — spot foto pagi yang sempurna.</div></div>
+      <div class="dest-card" data-region="timur"><div class="dest-region">Lombok Timur</div><div class="dest-name">Air Terjun Tiu Kelep</div><div class="dest-desc">Air terjun 42m di Senaru — kolam alami segar di tengah hutan tropis.</div></div>
+      <div class="dest-card" data-region="timur"><div class="dest-region">Lombok Timur</div><div class="dest-name">Pantai Pink (Tangsi)</div><div class="dest-desc">Pasir merah muda langka dari pecahan karang — salah satu pantai terunik di Indonesia.</div></div>
+      <div class="dest-card" data-region="tengah"><div class="dest-region">Lombok Tengah</div><div class="dest-name">Pantai Kuta Mandalika</div><div class="dest-desc">Ikon wisata Lombok dengan pasir merica putih dan kawasan Sirkuit MotoGP.</div></div>
+      <div class="dest-card" data-region="tengah"><div class="dest-region">Lombok Tengah</div><div class="dest-name">Bukit Merese</div><div class="dest-desc">Bukit berumput dengan sunset dramatis menghadap Pantai Tanjung Aan.</div></div>
+      <div class="dest-card" data-region="tengah"><div class="dest-region">Lombok Tengah</div><div class="dest-name">Desa Sade</div><div class="dest-desc">Perkampungan adat Suku Sasak — rumah beratap ijuk dan tenun ikat tradisional.</div></div>
+      <div class="dest-card" data-region="gili"><div class="dest-region">Kepulauan Gili</div><div class="dest-name">Gili Trawangan</div><div class="dest-desc">Pulau terbesar — snorkeling, diving, bersepeda, dan suasana pantai yang meriah.</div></div>
+      <div class="dest-card" data-region="gili"><div class="dest-region">Kepulauan Gili</div><div class="dest-name">Gili Meno</div><div class="dest-desc">Pulau tenang dengan spot snorkeling ikonik bersama patung bawah laut.</div></div>
+      <div class="dest-card" data-region="gili"><div class="dest-region">Kepulauan Gili</div><div class="dest-name">Gili Air</div><div class="dest-desc">Perpaduan kehidupan lokal dan pantai biru yang bersih — cocok untuk relaksasi.</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ADD-ON -->
+<section id="addon">
+  <div class="section-inner">
+    <span class="section-label">Tambahan Opsional</span>
+    <h2 class="section-title">Paket Add-on</h2>
+    <p class="section-desc">Perkaya pengalamanmu dengan aktivitas tambahan. Bisa dikombinasikan dengan paket mana saja.</p>
+    <div class="addon-grid">
+      <div class="addon-card">
+        <div class="addon-icon">🏔</div>
+        <div class="addon-name">Trekking Rinjani 2D/1N</div>
+        <div class="addon-desc">Pendakian via jalur Sembalun menuju Plawangan Sembalun (2.639 mdpl) dengan guide & porter profesional.</div>
+        <div class="addon-price">Rp 1,2jt <span class="addon-price-label">/ orang</span></div>
+      </div>
+      <div class="addon-card">
+        <div class="addon-icon">🤿</div>
+        <div class="addon-name">Snorkeling Pantai Pink</div>
+        <div class="addon-desc">Island hopping ke Pantai Pink, Gili Petelu, dan Gili Pasir dengan boat eksklusif.</div>
+        <div class="addon-price">Rp 350rb <span class="addon-price-label">/ orang</span></div>
+      </div>
+      <div class="addon-card">
+        <div class="addon-icon">🌊</div>
+        <div class="addon-name">Surfing Lesson</div>
+        <div class="addon-desc">Kelas surfing pemula di Pantai Selong Belanak — pantai dengan ombak ramah dan instruktur berpengalaman.</div>
+        <div class="addon-price">Rp 300rb <span class="addon-price-label">/ orang</span></div>
+      </div>
+      <div class="addon-card">
+        <div class="addon-icon">🎋</div>
+        <div class="addon-name">Cultural Immersion</div>
+        <div class="addon-desc">Belajar menenun kain Sasak di Desa Sukarara langsung dari pengrajin lokal, termasuk mencoba mengenakan pakaian adat.</div>
+        <div class="addon-price">Rp 150rb <span class="addon-price-label">/ orang</span></div>
+      </div>
+      <div class="addon-card">
+        <div class="addon-icon">📷</div>
+        <div class="addon-name">Trip Photography</div>
+        <div class="addon-desc">Fotografer profesional menemani 1 hari perjalananmu. Cocok untuk honeymoon atau konten sosial media.</div>
+        <div class="addon-price">Rp 500rb <span class="addon-price-label">/ hari</span></div>
+      </div>
+      <div class="addon-card">
+        <div class="addon-icon">🚤</div>
+        <div class="addon-name">Fast Boat ke Bali</div>
+        <div class="addon-desc">Lanjut perjalanan ke Bali via fast boat dari Bangsal/Lembar. Tiket resmi dengan jadwal pasti.</div>
+        <div class="addon-price">Rp 350–500rb <span class="addon-price-label">/ orang</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA / KONTAK -->
+<section id="kontak">
+  <div class="cta-tag">Hubungi Kami</div>
+  <h2 class="cta-title">Siap Jelajahi <em>Lombok</em> Bersama Kami?</h2>
+  <p class="cta-sub">Hubungi tim TRAVENTURE ID sekarang untuk booking, konsultasi itinerary, atau pertanyaan lainnya.</p>
+  <div class="cta-buttons">
+    <a href="https://wa.me/628123456789?text=Halo%20TRAVENTURE%20ID%2C%20saya%20tertarik%20dengan%20open%20trip%20Lombok" class="btn-wa" target="_blank">
+      <svg class="wa-icon" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+      Chat WhatsApp
+    </a>
+    <a href="mailto:hello@traventure.id" class="btn-ghost" style="border-color: rgba(255,255,255,0.25); color: var(--white);">hello@traventure.id</a>
+  </div>
+</section>
+
+<footer>
+  <div class="footer-logo">TRAVEN<span>TURE</span> ID</div>
+  <div>© 2025 Traventure ID. Open Trip & Private Tour Lombok.</div>
+  <div>Lombok, Nusa Tenggara Barat</div>
+</footer>
+
+<script>
+function switchPkg(idx) {
+  document.querySelectorAll('.pkg-tab').forEach((t,i) => t.classList.toggle('active', i===idx));
+  document.querySelectorAll('.pkg-panel').forEach((p,i) => p.classList.toggle('active', i===idx));
+}
+
+function filterDest(region, btn) {
+  document.querySelectorAll('.dest-filter-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  document.querySelectorAll('.dest-card').forEach(card => {
+    if (region === 'all' || card.dataset.region === region) {
+      card.classList.remove('dest-hidden');
+    } else {
+      card.classList.add('dest-hidden');
+    }
+  });
+}
+
+// Smooth nav highlight
+const sections = document.querySelectorAll('section[id]');
+const navLinks = document.querySelectorAll('.nav-links a');
+window.addEventListener('scroll', () => {
+  let current = '';
+  sections.forEach(s => {
+    if (window.scrollY >= s.offsetTop - 120) current = s.id;
+  });
+  navLinks.forEach(a => {
+    a.style.color = a.getAttribute('href') === '#' + current ? '#2DBD80' : '';
+  });
+});
+</script>
+</body>
+</html>
